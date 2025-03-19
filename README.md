@@ -46,7 +46,7 @@ E-FileTrack/
 ### 1️⃣ Clone Repository backend
 ```bash
 git clone https://github.com/tajillahibnu/e-filetrack-backend.git
-cd E-FileTrack~backend
+cd e-filetrack-backend
 ```
 
 ### 2️⃣ Install Dependencies  
