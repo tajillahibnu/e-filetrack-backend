@@ -18,6 +18,7 @@ model Role {
   id          Int           @id @default(autoincrement())
   name        String        @unique
   users       User[]
+  roleMenu    RoleMenu[]
   permissions RolePermission[]
 }
 
@@ -28,13 +29,28 @@ model Permission {
 }
 
 model RolePermission {
+  id           Int           @id @default(autoincrement())
   roleId       Int
   permissionId Int
   role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
   permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
-
-  @@id([roleId, permissionId]) // Composite Key
 }
+
+model Menu {
+  id       Int           @id @default(autoincrement())
+  name     String
+  path     String        @unique
+  roleMenu RoleMenu[]
+}
+
+model RoleMenu {
+  id     Int           @id @default(autoincrement())
+  roleId Int
+  menuId Int
+  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  menu   Menu   @relation(fields: [menuId], references: [id], onDelete: Cascade)
+}
+
 
 model User {
   id          Int      @id @default(autoincrement()) // Auto-increment untuk integer
@@ -44,7 +60,23 @@ model User {
   password    String? 
   roleId   Int
   role     Role    @relation(fields: [roleId], references: [id])
-  createdAt   DateTime @default(now())
+  refreshToken String?  // Tambahkan kolom ini (opsional, bisa null)
+  createdAt    DateTime @default(now())
+  lastLogin    DateTime?  // ⬅️ Untuk mencatat waktu login terakhir
+  lastAction   DateTime?  // ⬅️ Untuk mencatat aksi terakhir user
+  logs     UserLog[]
+}
+
+model UserLog {
+  id        Int      @id @default(autoincrement()) // ID Auto-increment
+  userId    Int      // Ubah ke Int agar cocok dengan User.id
+  endpoint  String
+  method    String
+  timestamp DateTime @default(now())
+  ipAddress String?
+  userAgent String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model KategoriDokumen {

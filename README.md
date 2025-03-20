@@ -59,7 +59,8 @@ Buat file `.env` berdasarkan template `.env.example` dan isi dengan konfigurasi 
 
 ```env
 DATABASE_URL="mysql://user:password@localhost:3306/efiletrack"
-JWT_SECRET="your_secret_key"
+JWT_SECRET=mySuperSecretKey
+JWT_EXPIRES_IN=600s
 PORT=3000
 ```
 
@@ -78,6 +79,11 @@ npx prisma migrate reset
 #### 🔹 Migrasi Database  
 ```bash
 npx prisma migrate dev --name init
+```
+
+#### 🔹 Runing Seeder  
+```bash
+npx ts-node prisma/seed.ts
 ```
 
 ---

@@ -45,11 +45,13 @@ export class AuthController {
     return this.authService.validateUser(loginDto.username, loginDto.password);
   }
 
-  // @Post('login')
-  // async login(@Body() loginDto: { username: string; password: string }) {
-  //   if (!loginDto.username || !loginDto.password) {
-  //     throw new UnauthorizedException('Username dan password wajib diisi');
-  //   }
-  //   return this.authService.validateUser(loginDto.username, loginDto.password);
-  // }
+  @Post('refresh')
+  async refreshToken(@Body() body: { userId: number; refreshToken: string }) {
+    return this.authService.refreshToken(body.userId, body.refreshToken);
+  }
+
+  @Post('logout')
+  async logout(@Body() body: { userId: number }) {
+    return this.authService.logout(body.userId);
+  }
 }

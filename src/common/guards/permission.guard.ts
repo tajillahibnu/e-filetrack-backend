@@ -42,19 +42,24 @@ export class PermissionGuard implements CanActivate {
       (rp) => rp.permission.name,
     );
 
-    const requiredPermissions = this.reflector.get<string[]>(
-      'permissions',
-      context.getHandler(),
-    );
+    // Ambil metadata dari method dan controller, lalu gabungkan
+    const methodPermissions = this.reflector.get<string[]>('permissions', context.getHandler()) || [];
+    const classPermissions = this.reflector.get<string[]>('permissions', context.getClass()) || [];
+    const requiredPermissions = [
+      ...new Set([...classPermissions, ...methodPermissions])
+    ];
 
-    if (!requiredPermissions || requiredPermissions.length === 0) {
+    // Jika tidak ada metadata permission, izinkan akses
+    if (requiredPermissions.length === 0) {
       return true;
     }
 
+    // Jika user memiliki permission global '*', izinkan akses
     if (updatedPermissions.includes('*')) {
       return true;
     }
 
+    // Cek apakah user memiliki salah satu dari permission yang dibutuhkan
     const hasPermission = requiredPermissions.some((perm) =>
       updatedPermissions.includes(perm),
     );
